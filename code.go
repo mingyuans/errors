@@ -12,10 +12,10 @@ var (
 
 // Coder defines an interface for an error code detail information.
 type Coder interface {
-	// HTTP status that should be used for the associated error code.
+	// HTTPStatus HTTP status that should be used for the associated error code.
 	HTTPStatus() int
 
-	// External (user) facing error text.
+	// String External (user) facing error text.
 	String() string
 
 	// Reference returns the detail documents for user.
@@ -42,7 +42,6 @@ type defaultCoder struct {
 // Code returns the integer code of the coder.
 func (coder defaultCoder) Code() int {
 	return coder.C
-
 }
 
 // String implements stringer. String returns the external error message,
@@ -71,10 +70,10 @@ var codes = map[int]Coder{}
 var codeMux = &sync.Mutex{}
 
 // Register register a user define error code.
-// It will overrid the exist code.
+// It will override to exist code.
 func Register(coder Coder) {
-	if coder.Code() == 0 {
-		panic("code `0` is reserved by `github.com/marmotedu/errors` as unknownCode error code")
+	if coder.Code() == unknownCoder.Code() {
+		panic("code '1' is reserved as ErrUnknown error code")
 	}
 
 	codeMux.Lock()
@@ -86,8 +85,8 @@ func Register(coder Coder) {
 // MustRegister register a user define error code.
 // It will panic when the same Code already exist.
 func MustRegister(coder Coder) {
-	if coder.Code() == 0 {
-		panic("code '0' is reserved by 'github.com/marmotedu/errors' as ErrUnknown error code")
+	if coder.Code() == unknownCoder.C {
+		panic("code '1' is reserved as ErrUnknown error code")
 	}
 
 	codeMux.Lock()
