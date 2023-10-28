@@ -1,7 +1,6 @@
 package errors
 
 import (
-	"errors"
 	"fmt"
 	"net/http"
 	"sync"
@@ -98,38 +97,6 @@ func MustRegister(coder Coder) {
 	}
 
 	codes[coder.Code()] = coder
-}
-
-func GetDebugMessages(err error) []string {
-	var debugMessages []string
-
-	getDebugMessage := func(err error) string {
-		if v, ok := err.(*withCode); ok {
-			if v.err != nil {
-				return v.err.Error()
-			}
-			return v.Error()
-		} else if v, ok := err.(*withStack); ok {
-			return v.Error()
-		} else if v, ok := err.(*withMessage); ok {
-			return v.Error()
-		}
-		return err.Error()
-	}
-
-	var currentError = err
-	for {
-		message := getDebugMessage(currentError)
-		debugMessages = append(debugMessages, message)
-
-		cause := Cause(currentError)
-		if cause == nil || errors.Is(cause, currentError) {
-			break
-		}
-		currentError = cause
-	}
-
-	return debugMessages
 }
 
 // ParseCoder parse any error into *withCode.
