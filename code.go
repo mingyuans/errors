@@ -1,6 +1,7 @@
 package errors
 
 import (
+	"errors"
 	"fmt"
 	"net/http"
 	"sync"
@@ -122,7 +123,7 @@ func GetDebugMessages(err error) []string {
 		debugMessages = append(debugMessages, message)
 
 		cause := Cause(currentError)
-		if cause == nil || cause == currentError {
+		if cause == nil || errors.Is(cause, currentError) {
 			break
 		}
 		currentError = cause
