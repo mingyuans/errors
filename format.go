@@ -20,7 +20,7 @@ type formatInfo struct {
 // Verbs:
 //     %s  - Returns the user-safe error string mapped to the error code or
 //       ┊   the error message if none is specified.
-//     %v      Alias for %s
+//     %v    Return the error message for internal.
 //
 // Flags:
 //      #      JSON formatted output, useful for logging
@@ -28,7 +28,13 @@ type formatInfo struct {
 //      +      Output full error stack details, useful for debugging
 //
 // Examples:
-//      %s:    error for internal read B
+//		{
+//			code:    100102
+//			message: "(#100102) Internal Server Error"
+//			err:     "error for internal read B"
+//			stack    *stack
+//		}
+//      %s:    (#100102) Internal Server Error
 //      %v:    error for internal read B
 //      %-v:   error for internal read B - #0 [/home/lk/workspace/golang/src/github.com/marmotedu/iam/main.go:12 (main.main)] (#100102) Internal Server Error
 //      %+v:   error for internal read B - #0 [/home/lk/workspace/golang/src/github.com/marmotedu/iam/main.go:12 (main.main)] (#100102) Internal Server Error; error for internal read A - #1 [/home/lk/workspace/golang/src/github.com/marmotedu/iam/main.go:35 (main.newErrorB)] (#100104) Validation failed
@@ -39,7 +45,7 @@ func (w *withCode) Format(state fmt.State, verb rune) {
 	switch verb {
 	case 'v':
 		str := bytes.NewBuffer([]byte{})
-		jsonData := []map[string]interface{}{}
+		var jsonData []map[string]interface{}
 
 		var (
 			flagDetail bool
@@ -134,7 +140,7 @@ func format(k int, jsonData []map[string]interface{}, str *bytes.Buffer, finfo *
 			}
 
 		} else {
-			fmt.Fprintf(str, finfo.message)
+			fmt.Fprintf(str, finfo.err)
 		}
 	}
 

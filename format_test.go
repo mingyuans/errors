@@ -26,8 +26,8 @@ func TestFormatNew(t *testing.T) {
 		New("error"),
 		"%+v",
 		"error\n" +
-			"github.com/marmotedu/errors.TestFormatNew\n" +
-			"\t.+/github.com/marmotedu/errors/format_test.go:26",
+			"github.com/mingyuans/errors.TestFormatNew\n" +
+			"\t.+/github.com/mingyuans/errors/format_test.go:26",
 	}, {
 		New("error"),
 		"%q",
@@ -56,8 +56,8 @@ func TestFormatErrorf(t *testing.T) {
 		Errorf("%s", "error"),
 		"%+v",
 		"error\n" +
-			"github.com/marmotedu/errors.TestFormatErrorf\n" +
-			"\t.+/github.com/marmotedu/errors/format_test.go:56",
+			"github.com/mingyuans/errors.TestFormatErrorf\n" +
+			"\t.+/github.com/mingyuans/errors/format_test.go:56",
 	}}
 
 	for i, tt := range tests {
@@ -82,8 +82,8 @@ func TestFormatWrap(t *testing.T) {
 		Wrap(New("error"), "error2"),
 		"%+v",
 		"error\n" +
-			"github.com/marmotedu/errors.TestFormatWrap\n" +
-			"\t.+/github.com/marmotedu/errors/format_test.go:82",
+			"github.com/mingyuans/errors.TestFormatWrap\n" +
+			"\t.+/github.com/mingyuans/errors/format_test.go:82",
 	}, {
 		Wrap(io.EOF, "error"),
 		"%s",
@@ -97,15 +97,15 @@ func TestFormatWrap(t *testing.T) {
 		"%+v",
 		"EOF\n" +
 			"error\n" +
-			"github.com/marmotedu/errors.TestFormatWrap\n" +
-			"\t.+/github.com/marmotedu/errors/format_test.go:96",
+			"github.com/mingyuans/errors.TestFormatWrap\n" +
+			"\t.+/github.com/mingyuans/errors/format_test.go:96",
 	}, {
 		Wrap(Wrap(io.EOF, "error1"), "error2"),
 		"%+v",
 		"EOF\n" +
 			"error1\n" +
-			"github.com/marmotedu/errors.TestFormatWrap\n" +
-			"\t.+/github.com/marmotedu/errors/format_test.go:103\n",
+			"github.com/mingyuans/errors.TestFormatWrap\n" +
+			"\t.+/github.com/mingyuans/errors/format_test.go:103\n",
 	}, {
 		Wrap(New("error with space"), "context"),
 		"%q",
@@ -135,8 +135,8 @@ func TestFormatWrapf(t *testing.T) {
 		"%+v",
 		"EOF\n" +
 			"error2\n" +
-			"github.com/marmotedu/errors.TestFormatWrapf\n" +
-			"\t.+/github.com/marmotedu/errors/format_test.go:134",
+			"github.com/mingyuans/errors.TestFormatWrapf\n" +
+			"\t.+/github.com/mingyuans/errors/format_test.go:134",
 	}, {
 		Wrapf(New("error"), "error%d", 2),
 		"%s",
@@ -149,8 +149,8 @@ func TestFormatWrapf(t *testing.T) {
 		Wrapf(New("error"), "error%d", 2),
 		"%+v",
 		"error\n" +
-			"github.com/marmotedu/errors.TestFormatWrapf\n" +
-			"\t.+/github.com/marmotedu/errors/format_test.go:149",
+			"github.com/mingyuans/errors.TestFormatWrapf\n" +
+			"\t.+/github.com/mingyuans/errors/format_test.go:149",
 	}}
 
 	for i, tt := range tests {
@@ -175,8 +175,8 @@ func TestFormatWithStack(t *testing.T) {
 		WithStack(io.EOF),
 		"%+v",
 		[]string{"EOF",
-			"github.com/marmotedu/errors.TestFormatWithStack\n" +
-				"\t.+/github.com/marmotedu/errors/format_test.go:175"},
+			"github.com/mingyuans/errors.TestFormatWithStack\n" +
+				"\t.+/github.com/mingyuans/errors/format_test.go:175"},
 	}, {
 		WithStack(New("error")),
 		"%s",
@@ -189,37 +189,37 @@ func TestFormatWithStack(t *testing.T) {
 		WithStack(New("error")),
 		"%+v",
 		[]string{"error",
-			"github.com/marmotedu/errors.TestFormatWithStack\n" +
-				"\t.+/github.com/marmotedu/errors/format_test.go:189",
-			"github.com/marmotedu/errors.TestFormatWithStack\n" +
-				"\t.+/github.com/marmotedu/errors/format_test.go:189"},
+			"github.com/mingyuans/errors.TestFormatWithStack\n" +
+				"\t.+/github.com/mingyuans/errors/format_test.go:189",
+			"github.com/mingyuans/errors.TestFormatWithStack\n" +
+				"\t.+/github.com/mingyuans/errors/format_test.go:189"},
 	}, {
 		WithStack(WithStack(io.EOF)),
 		"%+v",
 		[]string{"EOF",
-			"github.com/marmotedu/errors.TestFormatWithStack\n" +
-				"\t.+/github.com/marmotedu/errors/format_test.go:197",
-			"github.com/marmotedu/errors.TestFormatWithStack\n" +
-				"\t.+/github.com/marmotedu/errors/format_test.go:197"},
+			"github.com/mingyuans/errors.TestFormatWithStack\n" +
+				"\t.+/github.com/mingyuans/errors/format_test.go:197",
+			"github.com/mingyuans/errors.TestFormatWithStack\n" +
+				"\t.+/github.com/mingyuans/errors/format_test.go:197"},
 	}, {
 		WithStack(WithStack(Wrapf(io.EOF, "message"))),
 		"%+v",
 		[]string{"EOF",
 			"message",
-			"github.com/marmotedu/errors.TestFormatWithStack\n" +
-				"\t.+/github.com/marmotedu/errors/format_test.go:205",
-			"github.com/marmotedu/errors.TestFormatWithStack\n" +
-				"\t.+/github.com/marmotedu/errors/format_test.go:205",
-			"github.com/marmotedu/errors.TestFormatWithStack\n" +
-				"\t.+/github.com/marmotedu/errors/format_test.go:205"},
+			"github.com/mingyuans/errors.TestFormatWithStack\n" +
+				"\t.+/github.com/mingyuans/errors/format_test.go:205",
+			"github.com/mingyuans/errors.TestFormatWithStack\n" +
+				"\t.+/github.com/mingyuans/errors/format_test.go:205",
+			"github.com/mingyuans/errors.TestFormatWithStack\n" +
+				"\t.+/github.com/mingyuans/errors/format_test.go:205"},
 	}, {
 		WithStack(Errorf("error%d", 1)),
 		"%+v",
 		[]string{"error1",
-			"github.com/marmotedu/errors.TestFormatWithStack\n" +
-				"\t.+/github.com/marmotedu/errors/format_test.go:216",
-			"github.com/marmotedu/errors.TestFormatWithStack\n" +
-				"\t.+/github.com/marmotedu/errors/format_test.go:216"},
+			"github.com/mingyuans/errors.TestFormatWithStack\n" +
+				"\t.+/github.com/mingyuans/errors/format_test.go:216",
+			"github.com/mingyuans/errors.TestFormatWithStack\n" +
+				"\t.+/github.com/mingyuans/errors/format_test.go:216"},
 	}}
 
 	for i, tt := range tests {
@@ -565,9 +565,10 @@ func TestFormatCode(t *testing.T) {
 		want   string
 	}{
 		{"%s", `ConfigurationNotValid error`},
-		{"%v", `ConfigurationNotValid error`},
+		{"%v", `service configuration could not be loaded`},
 		{"%-v", `^service configuration could not be loaded - #3 \[.*mocks_test.go:34 \(.*errors.loadConfig\)\] \(1000\) ConfigurationNotValid error$`},
 		{"%+v", `^service configuration could not be loaded - #3 \[.*mocks_test.go:34 \(.*errors.loadConfig\)\] \(1000\) ConfigurationNotValid error; could not decode configuration data - #2 \[.*mocks_test.go:39 \(.*errors.decodeConfig\)\] \(1001\) Data is not valid JSON; could not read configuration file - #1 \[.*mocks_test.go:44 \(.*errors.readConfig\)\] \(1002\) End of input; read: end of input - #0 read: end of input`},
+		{"%#v", `["error":"service configuration could not be loaded"]`},
 		{"%#-v", `[{\"caller\":\"#3 /home/lk/workspace/golang/src/github.com/marmotedu/errors/mocks_test.go:34 (github.com/marmotedu/errors.loadConfig)\",\"code\":1000,\"error\":\"service configuration could not be loaded\",\"message\":\"ConfigurationNotValid error\"}]`},
 		{"%#+v", `[{\"caller\":\"#3 /home/lk/workspace/golang/src/github.com/marmotedu/errors/mocks_test.go:34 (github.com/marmotedu/errors.loadConfig)\",\"code\":1000,\"error\":\"service configuration could not be loaded\",\"message\":\"ConfigurationNotValid error\"},{\"caller\":\"#2 /home/lk/workspace/golang/src/github.com/marmotedu/errors/mocks_test.go:39 (github.com/marmotedu/errors.decodeConfig)\",\"code\":1001,\"error\":\"could not decode configuration data\",\"message\":\"Data is not valid JSON\"},{\"caller\":\"#1 /home/lk/workspace/golang/src/github.com/marmotedu/errors/mocks_test.go:39 (github.com/marmotedu/errors.readConfig)\",\"code\":1002,\"error\":\"could not read configuration file\",\"message\":\"End of input\"},{\"caller\":\"#0\",\"code\":1,\"error\":\"read: end of input\",\"message\":\"read: end of input\"}]`},
 	}

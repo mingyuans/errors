@@ -256,7 +256,7 @@ func TestWithCodef(t *testing.T) {
 		wantCode   int
 		wangString string
 	}{
-		{ConfigurationNotValid, "Configuration %s", "failed", "*withCode", ConfigurationNotValid, `ConfigurationNotValid error`},
+		{ConfigurationNotValid, "Configuration %s", "failed", "*withCode", ConfigurationNotValid, `Configuration failed`},
 	}
 
 	for _, tt := range tests {
