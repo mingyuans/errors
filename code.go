@@ -13,7 +13,7 @@ var (
 // Coder defines an interface for an error code detail information.
 type Coder interface {
 	// HTTPStatus HTTP status that should be used for the associated error code.
-	HTTPStatus() int
+	HTTPStatus() uint16
 
 	// String External (user) facing error text.
 	String() string
@@ -22,15 +22,15 @@ type Coder interface {
 	Reference() string
 
 	// Code returns the code of the coder
-	Code() int
+	Code() uint32
 }
 
 type defaultCoder struct {
 	// C refers to the integer code of the ErrCode.
-	C int
+	C uint32
 
 	// HTTP status that should be used for the associated error code.
-	HTTP int
+	HTTP uint16
 
 	// External (user) facing error text.
 	Ext string
@@ -40,7 +40,7 @@ type defaultCoder struct {
 }
 
 // Code returns the integer code of the coder.
-func (coder defaultCoder) Code() int {
+func (coder defaultCoder) Code() uint32 {
 	return coder.C
 }
 
@@ -52,7 +52,7 @@ func (coder defaultCoder) String() string {
 
 // HTTPStatus returns the associated HTTP status code, if any. Otherwise,
 // returns 200.
-func (coder defaultCoder) HTTPStatus() int {
+func (coder defaultCoder) HTTPStatus() uint16 {
 	if coder.HTTP == 0 {
 		return 500
 	}
@@ -66,7 +66,7 @@ func (coder defaultCoder) Reference() string {
 }
 
 // codes contains a map of error codes to metadata.
-var codes = map[int]Coder{}
+var codes = map[uint32]Coder{}
 var codeMux = &sync.Mutex{}
 
 // Register register a user define error code.
@@ -117,7 +117,7 @@ func ParseCoder(err error) Coder {
 }
 
 // IsCode reports whether any error in err's chain contains the given error code.
-func IsCode(err error, code int) bool {
+func IsCode(err error, code uint32) bool {
 	if v, ok := err.(*withCode); ok {
 		if v.code == code {
 			return true
