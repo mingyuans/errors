@@ -11,22 +11,23 @@ examples.
 
 import (
 	"fmt"
+	code "github.com/mingyuans/goerr-gen/codegen"
 )
 
 const (
 	// Error codes below 1000 are reserved future use by the
 	// "github.com/bdlm/errors" package.
-	ConfigurationNotValid int = iota + 1000
+	ConfigurationNotValid uint32 = iota + 1000
 	ErrInvalidJSON
 	ErrEOF
 	ErrLoadConfigFailed
 )
 
 func init() {
-	Register(defaultCoder{ConfigurationNotValid, 500, "ConfigurationNotValid error", ""})
-	Register(defaultCoder{ErrInvalidJSON, 500, "Data is not valid JSON", ""})
-	Register(defaultCoder{ErrEOF, 500, "End of input", ""})
-	Register(defaultCoder{ErrLoadConfigFailed, 500, "Load configuration file failed", ""})
+	code.Register(ConfigurationNotValid, 500, "ConfigurationNotValid error", "")
+	code.Register(ErrInvalidJSON, 500, "Data is not valid JSON", "")
+	code.Register(ErrEOF, 500, "End of input", "")
+	code.Register(ErrLoadConfigFailed, 500, "Load configuration file failed", "")
 }
 
 func loadConfig() error {

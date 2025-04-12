@@ -2,6 +2,7 @@ package errors
 
 import (
 	"fmt"
+	code "github.com/mingyuans/goerr-gen/codegen"
 )
 
 func ExampleNew() {
@@ -212,7 +213,8 @@ func ExampleWithCode() {
 	fmt.Println(err)
 
 	err = WrapC(err, ErrInvalidJSON, "this is a wrap error message with new error code")
-	fmt.Println(codes[err.(*withCode).code].String())
+	coder, _ := code.GetCoder(err.(*withCode).code)
+	fmt.Println(coder.String())
 	fmt.Println(err)
 	//fmt.Printf("%+v\n", err)
 	//fmt.Printf("%#+v\n", err)
@@ -240,7 +242,8 @@ func ExampledefaultCoder_HTTPStatus() {
 		err = WrapC(err, ErrLoadConfigFailed, "failed to load configuration")
 	}
 
-	fmt.Println(codes[err.(*withCode).code].HTTPStatus())
+	coder, _ := code.GetCoder(err.(*withCode).code)
+	fmt.Println(coder.HTTPStatus())
 	// Output: 500
 }
 
@@ -261,6 +264,7 @@ func ExampleString() {
 		err = WrapC(err, ErrLoadConfigFailed, "failed to load configuration")
 	}
 
-	fmt.Println(codes[err.(*withCode).code].String())
+	coder, _ := code.GetCoder(err.(*withCode).code)
+	fmt.Println(coder.String())
 	// Output: Load configuration file failed
 }

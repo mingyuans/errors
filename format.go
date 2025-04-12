@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
+	code "github.com/mingyuans/goerr-gen/codegen"
 	"strings"
 )
 
@@ -90,11 +91,11 @@ func (w *withCode) Format(state fmt.State, verb rune) {
 			str.Write(byts)
 		}
 
-		fmt.Fprintf(state, "%s", strings.Trim(str.String(), "\r\n\t"))
+		_, _ = fmt.Fprintf(state, "%s", strings.Trim(str.String(), "\r\n\t"))
 	default:
 		finfo := buildFormatInfo(w)
 		// Externally-safe error message
-		fmt.Fprintf(state, finfo.message)
+		_, _ = fmt.Fprintf(state, finfo.message)
 	}
 }
 
@@ -139,11 +140,11 @@ func format(k int, jsonData []map[string]interface{}, str *bytes.Buffer, finfo *
 					finfo.message,
 				)
 			} else {
-				fmt.Fprintf(str, "%s%s - #%d %s", sep, finfo.err, k, finfo.message)
+				_, _ = fmt.Fprintf(str, "%s%s - #%d %s", sep, finfo.err, k, finfo.message)
 			}
 
 		} else {
-			fmt.Fprintf(str, finfo.err)
+			_, _ = fmt.Fprintf(str, finfo.err)
 		}
 	}
 
@@ -185,7 +186,7 @@ func buildFormatInfo(e error) *formatInfo {
 			stack:   err.stack,
 		}
 	case *withCode:
-		coder, ok := codes[err.code]
+		coder, ok := code.GetCoder(err.code)
 		if !ok {
 			coder = unknownCoder
 		}

@@ -1,36 +1,20 @@
 package errors
 
 import (
-	"fmt"
+	code "github.com/mingyuans/goerr-gen/codegen"
 	"net/http"
-	"sync"
 )
 
 var (
-	unknownCoder defaultCoder = defaultCoder{1, http.StatusInternalServerError, "An internal server error occurred", "http://github.com/marmotedu/errors/README.md"}
+	unknownCoder defaultCoder = defaultCoder{1, http.StatusInternalServerError, "An internal server error occurred", ""}
 )
-
-// Coder defines an interface for an error code detail information.
-type Coder interface {
-	// HTTPStatus HTTP status that should be used for the associated error code.
-	HTTPStatus() uint16
-
-	// String External (user) facing error text.
-	String() string
-
-	// Reference returns the detail documents for user.
-	Reference() string
-
-	// Code returns the code of the coder
-	Code() uint32
-}
 
 type defaultCoder struct {
 	// C refers to the integer code of the ErrCode.
 	C uint32
 
 	// HTTP status that should be used for the associated error code.
-	HTTP uint16
+	HTTP int
 
 	// External (user) facing error text.
 	Ext string
@@ -52,7 +36,7 @@ func (coder defaultCoder) String() string {
 
 // HTTPStatus returns the associated HTTP status code, if any. Otherwise,
 // returns 200.
-func (coder defaultCoder) HTTPStatus() uint16 {
+func (coder defaultCoder) HTTPStatus() int {
 	if coder.HTTP == 0 {
 		return 500
 	}
@@ -65,50 +49,16 @@ func (coder defaultCoder) Reference() string {
 	return coder.Ref
 }
 
-// codes contains a map of error codes to metadata.
-var codes = map[uint32]Coder{}
-var codeMux = &sync.Mutex{}
-
-// Register register a user define error code.
-// It will override to exist code.
-func Register(coder Coder) {
-	if coder.Code() == unknownCoder.Code() {
-		panic("code '1' is reserved as ErrUnknown error code")
-	}
-
-	codeMux.Lock()
-	defer codeMux.Unlock()
-
-	codes[coder.Code()] = coder
-}
-
-// MustRegister register a user define error code.
-// It will panic when the same Code already exist.
-func MustRegister(coder Coder) {
-	if coder.Code() == unknownCoder.C {
-		panic("code '1' is reserved as ErrUnknown error code")
-	}
-
-	codeMux.Lock()
-	defer codeMux.Unlock()
-
-	if _, ok := codes[coder.Code()]; ok {
-		panic(fmt.Sprintf("code: %d already exist", coder.Code()))
-	}
-
-	codes[coder.Code()] = coder
-}
-
 // ParseCoder parse any error into *withCode.
 // nil error will return nil direct.
 // None withStack error will be parsed as ErrUnknown.
-func ParseCoder(err error) Coder {
+func ParseCoder(err error) code.Coder {
 	if err == nil {
 		return nil
 	}
 
 	if v, ok := err.(*withCode); ok {
-		if coder, ok := codes[v.code]; ok {
+		if coder, ok := code.GetCoder(v.code); ok {
 			return coder
 		}
 	}
@@ -131,8 +81,4 @@ func IsCode(err error, code uint32) bool {
 	}
 
 	return false
-}
-
-func init() {
-	codes[unknownCoder.Code()] = unknownCoder
 }

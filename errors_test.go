@@ -226,10 +226,10 @@ func TestWithMessagef(t *testing.T) {
 
 func TestWithCode(t *testing.T) {
 	tests := []struct {
-		code     int
+		code     uint32
 		message  string
 		wantType string
-		wantCode int
+		wantCode uint32
 	}{
 		{ConfigurationNotValid, "ConfigurationNotValid error", "*withCode", ConfigurationNotValid},
 	}
@@ -249,11 +249,11 @@ func TestWithCode(t *testing.T) {
 
 func TestWithCodef(t *testing.T) {
 	tests := []struct {
-		code       int
+		code       uint32
 		format     string
 		args       string
 		wantType   string
-		wantCode   int
+		wantCode   uint32
 		wangString string
 	}{
 		{ConfigurationNotValid, "Configuration %s", "failed", "*withCode", ConfigurationNotValid, `Configuration failed`},
@@ -307,7 +307,7 @@ func TestParseCoder(t *testing.T) {
 		err           error
 		wantHTTPCode  int
 		wantString    string
-		wantCode      int
+		wantCode      uint32
 		wantReference string
 	}{
 		{fmt.Errorf("yes error"), 500, "An internal server error occurred", 1, "http://github.com/marmotedu/errors/README.md"},
